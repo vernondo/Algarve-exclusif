@@ -1,25 +1,32 @@
-
 import { Lead } from '../types';
 
 /**
  * CloudDB Service (Algarve Exclusif - Luxury Edition)
  * Handles:
- * 1. Persistent storage in KVDB (for Admin Dashboard)
+ * 1. Persistent storage in Google Sheets via SheetDB
  * 2. High-priority lead notifications via EmailJS
  */
-const API_URL = "";
 
-/** 
+// ✅ Your SheetDB API URL (connected to your Google Sheet)
+const API_URL = 'https://sheetdb.io/api/v1/pkqvc99faf8zu';
+
+/**
  * EMAILJS CONFIGURATION
- * Note: EmailJS IDs are typically all lowercase.
+ * ⚠️ SECURITY TIP: Move these to a .env file if your GitHub repo is public.
+ * In your .env file add:
+ *   VITE_EMAILJS_SERVICE_ID=service_pyok4cx
+ *   VITE_EMAILJS_TEMPLATE_ID=template_j1wxlr1
+ *   VITE_EMAILJS_PUBLIC_KEY=8UDSxB2lSml4PJzI2
+ * Then replace the values below with:
+ *   import.meta.env.VITE_EMAILJS_SERVICE_ID  etc.
  */
-const EMAILJS_SERVICE_ID = 'service_pyok4cx'; 
-const EMAILJS_TEMPLATE_ID = 'template_j1wxlr1'; // Changed to lowercase 'template_'
+const EMAILJS_SERVICE_ID = 'service_pyok4cx';
+const EMAILJS_TEMPLATE_ID = 'template_j1wxlr1';
 const EMAILJS_PUBLIC_KEY = '8UDSxB2lSml4PJzI2';
 
 export const cloudDb = {
   /**
-   * Fetch leads for the private admin area
+   * Fetch all leads from Google Sheet (for Admin Dashboard)
    */
   async getLeads(): Promise<Lead[]> {
     try {
@@ -27,46 +34,59 @@ export const cloudDb = {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       });
-      
+
       if (!response.ok) {
         if (response.status === 404) return [];
         throw new Error(`DB Connection Error: ${response.status}`);
       }
-      
+
       const data = await response.json();
       const leads = Array.isArray(data) ? data : [];
-      
+
+      // Keep a local backup in case of network issues
       localStorage.setItem('algarve_exclusif_leads', JSON.stringify(leads));
       return leads;
+
     } catch (error) {
+      console.error('Failed to fetch leads from SheetDB:', error);
+      // Fall back to locally cached leads if network fails
       const local = localStorage.getItem('algarve_exclusif_leads');
       return local ? JSON.parse(local) : [];
     }
   },
 
   /**
-   * Save lead and trigger notifications
+   * Save a new lead to Google Sheet and trigger email notification
    */
   async saveLead(lead: Lead): Promise<boolean> {
     try {
-      const currentLeads = await this.getLeads();
-      const updatedLeads = [lead, ...currentLeads];
-      
-      localStorage.setItem('algarve_exclusif_leads', JSON.stringify(updatedLeads));
-
-      // Push to central database (KVDB)
-      const dbResponse = const API_URL = "";
- {
+      // SheetDB expects data wrapped in a "data" array
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedLeads)
+        body: JSON.stringify({ data: [lead] })
       });
 
-      // Send Instant Notification via EmailJS
-      // We don't await this to avoid blocking the UI, but it runs in background
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('SheetDB Save Error:', errorText);
+        return false;
+      }
+
+      // Update local cache
+      const currentLeads = JSON.parse(
+        localStorage.getItem('algarve_exclusif_leads') || '[]'
+      );
+      localStorage.setItem(
+        'algarve_exclusif_leads',
+        JSON.stringify([lead, ...currentLeads])
+      );
+
+      // Fire email notification in the background (non-blocking)
       this.triggerEmailJSPush(lead);
 
-      return dbResponse.ok;
+      return true;
+
     } catch (error) {
       console.error('Cloud Sync Error:', error);
       return false;
@@ -74,16 +94,15 @@ export const cloudDb = {
   },
 
   /**
-   * Directly interface with EmailJS REST API
+   * Send instant email notification via EmailJS
    */
   async triggerEmailJSPush(lead: Lead) {
-    if (!EMAILJS_PUBLIC_KEY || !EMAILJS_TEMPLATE_ID || EMAILJS_PUBLIC_KEY.includes('YOUR_')) {
-      console.warn('EmailJS IDs not fully configured. Notification skipped.');
+    if (!EMAILJS_PUBLIC_KEY || !EMAILJS_TEMPLATE_ID) {
+      console.warn('EmailJS not configured. Notification skipped.');
       return;
     }
 
-    // Format specific requirements for the template message
-    const details = lead.type === 'buyer' 
+    const details = lead.type === 'buyer'
       ? `BUDGET: ${lead.budget}\nAREA: ${lead.area}\nPROPERTY: ${lead.propertyType}\nBEDROOMS: ${lead.bedrooms}\nFEATURES: ${lead.features?.join(', ')}`
       : `LOCATION: ${lead.location}\nEXPECTED: ${lead.expectedPrice}\nCONDITION: ${lead.condition}\nDESC: ${lead.propertyDescription}`;
 
@@ -114,9 +133,8 @@ export const cloudDb = {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('EmailJS API Error:', errorText);
-        // If "Template ID not found" persists, verify the ID in EmailJS Dashboard > Email Templates
       } else {
-        console.log('EmailJS: Lead details successfully dispatched to Vernondo.');
+        console.log('✅ EmailJS: Lead notification sent successfully.');
       }
     } catch (error) {
       console.error('EmailJS Network Failure:', error);
@@ -124,18 +142,22 @@ export const cloudDb = {
   },
 
   /**
-   * Reset database (Admin only)
+   * Clear all leads (Admin only)
+   * ⚠️ This deletes ALL rows from your Google Sheet. Use with caution!
    */
   async clearLeads(): Promise<boolean> {
     try {
       localStorage.removeItem('algarve_exclusif_leads');
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([])
+
+      // SheetDB delete all rows (keeps header row intact)
+      const response = await fetch(`${API_URL}/all`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
       });
+
       return response.ok;
     } catch (error) {
+      console.error('Clear leads failed:', error);
       return false;
     }
   }
