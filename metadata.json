@@ -1,0 +1,17 @@
+{
+  "name": "Algarve Exclusif",
+  "short_name": "Exclusif",
+  "description": "The Private Network for Algarve's Finest Properties.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#c5a059",
+  "icons": [
+    {
+      "src": "https://st3.idealista.pt/news/arquivos/styles/fullwidth_xl/public/2024-12/images/252311629.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "requestFramePermissions": []
+}
