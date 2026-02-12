@@ -7,8 +7,7 @@ import { Lead } from '../types';
  * 1. Persistent storage in KVDB (for Admin Dashboard)
  * 2. High-priority lead notifications via EmailJS
  */
-const SECURE_TOKEN = 'V_Boshoff_789432'; 
-const API_URL = `https://kvdb.io/ANscE7Z3u4zF1P8W9e7e7e/AE_Leads_${SECURE_TOKEN}`;
+const API_URL = "";
 
 /** 
  * EMAILJS CONFIGURATION
@@ -56,7 +55,8 @@ export const cloudDb = {
       localStorage.setItem('algarve_exclusif_leads', JSON.stringify(updatedLeads));
 
       // Push to central database (KVDB)
-      const dbResponse = await fetch(API_URL, {
+      const dbResponse = const API_URL = "";
+ {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedLeads)
