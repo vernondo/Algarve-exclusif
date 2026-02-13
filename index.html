@@ -1,39 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
- 
-<!-- Meta Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '2372781103181890');
-  fbq('track', 'PageView');
-</script>
-<noscript>
-  <img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=2372781103181890&ev=PageView&noscript=1"/>
-</noscript>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- SEO / Social Media Meta Tags -->
-  <title>Algarve Exclusif | Private Luxury Property Network</title>
-  <meta name="description" content="Confidential access to the Algarve's most prestigious off-market properties. Private valuations and elite buyer positioning.">
-  <meta name="keywords" content="Algarve Real Estate, Quinta do Lago, Vale do Lobo, Luxury Villas Portugal, Off-market Algarve">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:title" content="Algarve Exclusif | Private Property Network">
-  <meta property="og:description" content="Access the Algarve's best off-market opportunities before they go public.">
-  <meta property="og:image" content="https://sunhatvillaswebstorage.blob.core.windows.net/photocache/5160/2880/1.jpg">
-  <meta property="og:url" content="https://algarve-exclusif.com">
-  <meta property="og:type" content="website">
 
   <!-- Meta Pixel Code -->
   <script>
@@ -48,8 +17,19 @@
   fbq('init', '2372781103181890');
   fbq('track', 'PageView');
   </script>
- 
   <!-- End Meta Pixel Code -->
+
+  <!-- SEO / Social Media Meta Tags -->
+  <title>Algarve Exclusif | Private Luxury Property Network</title>
+  <meta name="description" content="Confidential access to the Algarve's most prestigious off-market properties. Private valuations and elite buyer positioning.">
+  <meta name="keywords" content="Algarve Real Estate, Quinta do Lago, Vale do Lobo, Luxury Villas Portugal, Off-market Algarve">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Algarve Exclusif | Private Property Network">
+  <meta property="og:description" content="Access the Algarve's best off-market opportunities before they go public.">
+  <meta property="og:image" content="https://sunhatvillaswebstorage.blob.core.windows.net/photocache/5160/2880/1.jpg">
+  <meta property="og:url" content="https://algarve-exclusif.com">
+  <meta property="og:type" content="website">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
@@ -70,7 +50,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -80,23 +60,23 @@
       -webkit-font-smoothing: antialiased;
     }
     h1, h2, h3, .font-serif {
-      font-family: 'Playfair+Display', serif;
+      font-family: 'Playfair Display', serif;
     }
     .bg-luxury-gold { background-color: #c5a059; }
     .text-luxury-gold { color: #c5a059; }
     .border-luxury-gold { border-color: #c5a059; }
     .bg-luxury-dark { background-color: #1a1a1a; }
-    
+
     .lead-card { transition: all 0.3s ease; }
     .lead-card:hover {
       border-color: #c5a059;
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(197, 160, 89, 0.1);
     }
-    
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .animate-fadeIn { animation: fadeIn 0.8s ease-out forwards; }
-    
+
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .animate-slideUp { animation: slideUp 0.6s ease-out forwards; }
 
@@ -117,18 +97,23 @@
     }
   </style>
 
-<script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
+  <script type="importmap">
+  {
+    "imports": {
+      "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+      "react": "https://esm.sh/react@^19.2.4",
+      "react/": "https://esm.sh/react@^19.2.4/",
+      "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
+    }
   }
-}
-</script>
+  </script>
 </head>
 <body>
+  <!-- FB Pixel noscript fallback -->
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2372781103181890&ev=PageView&noscript=1"/>
+  </noscript>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
